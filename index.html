@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>거래소 비율 계산기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        .input-group input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .input-group input[type="number"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px dashed #007bff;
+            border-radius: 4px;
+            background-color: #e9f7ff;
+            font-size: 1.1em;
+            color: #333;
+            text-align: center;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>거래소 비율 계산기</h1>
+        <div class="input-group">
+            <label for="chaos">카오스/디바인 개수:</label>
+            <input type="number" id="chaos" placeholder="1딥에 정제 300개 팔거면 여긴 1을 입력" value="">
+        </div>
+        <div class="input-group">
+            <label for="itemA">니가 팔거 개수:</label>
+            <input type="number" id="itemA" placeholder="1딥에 정제 300개 팔거면 여긴 300을 입력" value="">
+        </div>
+        <div class="input-group">
+            <label for="myItems"> 팔고싶은거 몇개 들고있음?</label>
+            <input type="number" id="myItems" placeholder="지금 정제 몇개 들고있음??" value="">
+        </div>
+        <button onclick="calculateExchange()">계산하기</button>
+        <div class="result" id="result">
+            <p>여기에 계산 결과가 표시됩니다.</p>
+        </div>
+        <div class="error" id="error"></div>
+    </div>
+
+    <script>
+        function calculateExchange() {
+            const chaosPerTrade = parseInt(document.getElementById('chaos').value);
+            const itemAPerTrade = parseInt(document.getElementById('itemA').value);
+            const myItems = parseInt(document.getElementById('myItems').value);
+            // const itemName = document.getElementById('itemName').value; 
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            errorDiv.textContent = ''; // 이전 에러 메시지 초기화
+
+            if (isNaN(chaosPerTrade) || isNaN(itemAPerTrade) || isNaN(myItems) ||
+                chaosPerTrade <= 0 || itemAPerTrade <= 0 || myItems < 0) {
+                errorDiv.textContent = '모든 값을 입력하시오';
+                resultDiv.innerHTML = '<p>계산 결과</p>'; // 결과 초기화
+                return;
+            }
+
+            const numberOfTrades = Math.floor(myItems / itemAPerTrade);
+            const totalChaosObtained = numberOfTrades * chaosPerTrade;
+            const remainingItems = myItems % itemAPerTrade;
+
+            let resultText = '';
+            if (myItems === 0) {
+                resultText = `가지고 있는 XXX가 없습니다.`;
+            } else {
+                resultText = `<strong>${totalChaosObtained}</strong> 카오스/디바인에 <strong>${numberOfTrades * itemAPerTrade}</strong> 개 등록하면 됨<br>(팔고나면 ${remainingItems}개 남음)`;
+            }
+            
+            resultDiv.innerHTML = `<p>${resultText}</p>`;
+        }
+
+        // 마지막 입력 필드에서 Enter 키를 누르면 계산 실행
+        document.getElementById('myItems').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateExchange();
+            }
+        });
+
+        // 초기 계산 결과를 표시하기 위해 페이지 로드 시 한 번 실행
+        document.addEventListener('DOMContentLoaded', calculateExchange);
+    </script>
+</body>
+</html>
