@@ -95,7 +95,7 @@
             <input type="number" id="itemA" placeholder="1딥에 정제 300개 팔거면 여긴 300을 입력" value="">
         </div>
         <div class="input-group">
-            <label for="myItems"> 팔고싶은거 몇개 들고있음?</label>
+            <label for="myItems">팔고싶은거 몇개 들고있음?</label>
             <input type="number" id="myItems" placeholder="지금 정제 몇개 들고있음??" value="">
         </div>
         <button onclick="calculateExchange()">계산하기</button>
@@ -110,16 +110,15 @@
             const chaosPerTrade = parseInt(document.getElementById('chaos').value);
             const itemAPerTrade = parseInt(document.getElementById('itemA').value);
             const myItems = parseInt(document.getElementById('myItems').value);
-            // const itemName = document.getElementById('itemName').value; 
             const resultDiv = document.getElementById('result');
             const errorDiv = document.getElementById('error');
 
-            errorDiv.textContent = ''; // 이전 에러 메시지 초기화
+            errorDiv.textContent = '';
 
             if (isNaN(chaosPerTrade) || isNaN(itemAPerTrade) || isNaN(myItems) ||
                 chaosPerTrade <= 0 || itemAPerTrade <= 0 || myItems < 0) {
                 errorDiv.textContent = '모든 값을 입력하시오';
-                resultDiv.innerHTML = '<p>계산 결과</p>'; // 결과 초기화
+                resultDiv.innerHTML = '<p>계산 결과</p>';
                 return;
             }
 
@@ -133,19 +132,20 @@
             } else {
                 resultText = `<strong>${totalChaosObtained}</strong> 카오스/디바인에 <strong>${numberOfTrades * itemAPerTrade}</strong> 개 등록하면 됨<br>(팔고나면 ${remainingItems}개 남음)`;
             }
-            
+
             resultDiv.innerHTML = `<p>${resultText}</p>`;
         }
 
-        // 마지막 입력 필드에서 Enter 키를 누르면 계산 실행
         document.getElementById('myItems').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 calculateExchange();
             }
         });
 
-        // 초기 계산 결과를 표시하기 위해 페이지 로드 시 한 번 실행
-        document.addEventListener('DOMContentLoaded', calculateExchange);
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('chaos').focus(); // 자동 포커스
+            calculateExchange();
+        });
     </script>
 </body>
 </html>
